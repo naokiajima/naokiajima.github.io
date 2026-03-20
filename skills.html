@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nur Azimah — Skills</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F5F0E8;
+      --ink: #1A1714;
+      --warm: #C8A882;
+      --muted: #8A7F74;
+      --card-bg: #EFEAD7;
+      --accent: #B5652A;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.4rem 3rem;
+      background: rgba(245,240,232,0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(200,168,130,0.2);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--ink); }
+
+    /* PAGE HEADER */
+    .page-header {
+      min-height: 46vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8rem 2rem 4rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .page-header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 80% 20%, rgba(200,168,130,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 50% at 10% 80%, rgba(181,101,42,0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .page-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 9vw, 5rem);
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      animation: fadeDown 0.8s 0.1s ease both;
+      margin-bottom: 0.3em;
+    }
+    .page-header h1 em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--accent);
+    }
+
+    .page-header .tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-style: italic;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      animation: fadeDown 0.8s 0.25s ease both;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* SKILLS SECTION */
+    .skills-section {
+      padding: 4rem 3rem 7rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* CATEGORY BLOCK */
+    .category-block {
+      margin-bottom: 4rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .category-block.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .category-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(200,168,130,0.25);
+    }
+
+    .category-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1;
+    }
+
+    .category-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* SKILL ROWS */
+    .skill-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.35rem;
+    }
+
+    .skill-row {
+      display: grid;
+      grid-template-columns: 200px 1fr 56px;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .skill-name {
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: var(--ink);
+      letter-spacing: 0.02em;
+    }
+
+    .bar-track {
+      height: 1px;
+      background: rgba(200,168,130,0.25);
+      position: relative;
+    }
+
+    .bar-fill {
+      position: absolute;
+      left: 0; top: 0;
+      height: 1px;
+      background: var(--ink);
+      width: 0%;
+      transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .bar-fill::after {
+      content: '';
+      position: absolute;
+      right: -1px;
+      top: -3px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity 0.4s 1s;
+    }
+
+    .bar-fill.loaded::after {
+      opacity: 1;
+    }
+
+    .skill-level {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* SOFT SKILLS / TAGS */
+    .tags-block {
+      margin-top: 1rem;
+    }
+
+    .tags-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tag {
+      background: transparent;
+      border: 1px solid rgba(200,168,130,0.5);
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.9rem;
+      border-radius: 100px;
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .tag:hover {
+      border-color: var(--warm);
+      color: var(--ink);
+    }
+
+    /* DIVIDER */
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: var(--warm);
+      margin: 0 auto 4rem;
+      opacity: 0.5;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid rgba(200,168,130,0.2);
+      color: var(--muted);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+    }
+    footer a { color: var(--warm); text-decoration: none; }
+
+    /* RESPONSIVE */
+    @media (max-width: 700px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .skills-section { padding: 3rem 1.5rem 5rem; }
+      .skill-row {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+        gap: 0.5rem 1rem;
+      }
+      .skill-name { grid-column: 1; grid-row: 1; }
+      .skill-level { grid-column: 2; grid-row: 1; text-align: right; }
+      .bar-track { grid-column: 1 / -1; grid-row: 2; }
+      .category-title { font-size: 1.6rem; }
+    }
+
+    @media (max-width: 480px) {
+      .page-header h1 { font-size: 2.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">NAOKI</a>
+  <div class="nav-links">
+    <a href="index.html#works">Works</a>
+    <a href="skills.html" class="active">Skills</a>
+    <a href="mailto:fiestywanderlust@gmail.com">Contact</a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<section class="page-header">
+  <h1>Tools & <em>Expertise</em></h1>
+  <p class="tagline">A snapshot of what I know and how well I know it.</p>
+</section>
+
+<!-- SKILLS -->
+<section class="skills-section">
+
+  <!-- WEB & DESIGN -->
+  <div class="category-block">
+    <div class="category-header">
+      <h2 class="category-title">Web &amp; Design</h2>
+      <span class="category-label">Core discipline</span>
+    </div>
+    <div class="skill-list">
+      <div class="skill-row">
+        <span class="skill-name">HTML / CSS</span>
+        <div class="bar-track"><div class="bar-fill" data-width="95"></div></div>
+        <span class="skill-level">Expert</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">UI / Web Design</span>
+        <div class="bar-track"><div class="bar-fill" data-width="92"></div></div>
+        <span class="skill-level">Expert</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Responsive Design</span>
+        <div class="bar-track"><div class="bar-fill" data-width="90"></div></div>
+        <span class="skill-level">Expert</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">CMS (WordPress)</span>
+        <div class="bar-track"><div class="bar-fill" data-width="85"></div></div>
+        <span class="skill-level">Advanced</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">JavaScript</span>
+        <div class="bar-track"><div class="bar-fill" data-width="65"></div></div>
+        <span class="skill-level">Intermediate</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIGITAL MARKETING -->
+  <div class="category-block">
+    <div class="category-header">
+      <h2 class="category-title">Digital Marketing</h2>
+      <span class="category-label">Growth & visibility</span>
+    </div>
+    <div class="skill-list">
+      <div class="skill-row">
+        <span class="skill-name">SEO Optimisation</span>
+        <div class="bar-track"><div class="bar-fill" data-width="88"></div></div>
+        <span class="skill-level">Advanced</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">SEM / Google Ads</span>
+        <div class="bar-track"><div class="bar-fill" data-width="80"></div></div>
+        <span class="skill-level">Advanced</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Email Marketing</span>
+        <div class="bar-track"><div class="bar-fill" data-width="82"></div></div>
+        <span class="skill-level">Advanced</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Content Strategy</span>
+        <div class="bar-track"><div class="bar-fill" data-width="90"></div></div>
+        <span class="skill-level">Expert</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Analytics &amp; Reporting</span>
+        <div class="bar-track"><div class="bar-fill" data-width="75"></div></div>
+        <span class="skill-level">Advanced</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRAPHICS & TOOLS -->
+  <div class="category-block">
+    <div class="category-header">
+      <h2 class="category-title">Graphics &amp; Tools</h2>
+      <span class="category-label">Visual production</span>
+    </div>
+    <div class="skill-list">
+      <div class="skill-row">
+        <span class="skill-name">Adobe Photoshop</span>
+        <div class="bar-track"><div class="bar-fill" data-width="85"></div></div>
+        <span class="skill-level">Advanced</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Adobe Illustrator</span>
+        <div class="bar-track"><div class="bar-fill" data-width="80"></div></div>
+        <span class="skill-level">Advanced</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Figma</span>
+        <div class="bar-track"><div class="bar-fill" data-width="78"></div></div>
+        <span class="skill-level">Advanced</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Logo &amp; Brand Design</span>
+        <div class="bar-track"><div class="bar-fill" data-width="82"></div></div>
+        <span class="skill-level">Advanced</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ALSO FAMILIAR WITH -->
+  <div class="category-block tags-block">
+    <div class="category-header">
+      <h2 class="category-title">Also familiar with</h2>
+      <span class="category-label">Broader toolkit</span>
+    </div>
+    <div class="tags-grid">
+      <span class="tag">Content Structuring</span>
+      <span class="tag">E-commerce</span>
+      <span class="tag">Google Search Console</span>
+      <span class="tag">Google Analytics</span>
+      <span class="tag">Mailchimp</span>
+      <span class="tag">A/B Testing</span>
+      <span class="tag">Conversion Rate Optimisation</span>
+      <span class="tag">Social Media Strategy</span>
+      <span class="tag">Copywriting</span>
+      <span class="tag">Adobe XD</span>
+      <span class="tag">Canva</span>
+      <span class="tag">Information Architecture</span>
+    </div>
+  </div>
+
+</section>
+
+<footer>
+  <p>© 2026 Nur Azimah &nbsp;·&nbsp; Designed with structure &nbsp;·&nbsp; <a href="index.html">Back to portfolio</a></p>
+</footer>
+
+<script>
+  // Animate bars when visible
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        entry.target.querySelectorAll('.bar-fill').forEach((bar, i) => {
+          setTimeout(() => {
+            bar.style.width = bar.dataset.width + '%';
+            bar.classList.add('loaded');
+          }, i * 80);
+        });
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.category-block').forEach(block => {
+    observer.observe(block);
+  });
+</script>
+</body>
+</html>

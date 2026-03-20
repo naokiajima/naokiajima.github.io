@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Project — JBT Website</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F5F0E8;
+      --ink: #1A1714;
+      --warm: #C8A882;
+      --muted: #8A7F74;
+      --accent: #B5652A;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV (unchanged from original) ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.4rem 3rem;
+      background: rgba(245,240,232,0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(200,168,130,0.2);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--ink); text-decoration: none;
+    }
+    .back-link {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      display: flex; align-items: center; gap: 0.5rem;
+      transition: color 0.3s;
+    }
+    .back-link:hover { color: var(--ink); }
+    .back-link .arrow { font-size: 1rem; transition: transform 0.3s; }
+    .back-link:hover .arrow { transform: translateX(-3px); }
+
+    /* ── HERO (unchanged from original) ── */
+    .project-hero {
+      padding: 8rem 3rem 4rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: end;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .project-meta {
+      display: flex; flex-direction: column; gap: 0.4rem;
+      margin-bottom: 1.2rem;
+    }
+    .project-number {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--warm);
+    }
+    .project-category-tag {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: transparent;
+      border: 1px solid rgba(200,168,130,0.5);
+      color: var(--muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.8rem;
+      border-radius: 100px;
+      width: fit-content;
+    }
+    .project-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 5vw, 4.2rem);
+      font-weight: 700;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 1.2rem;
+    }
+    .project-title em { font-style: italic; font-weight: 300; color: var(--accent); }
+    .project-desc {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--muted);
+      max-width: 440px;
+    }
+    .project-details-sidebar {
+      display: flex; flex-direction: column; gap: 1.5rem;
+      padding-bottom: 0.5rem;
+    }
+    .detail-item {
+      border-top: 1px solid rgba(200,168,130,0.25);
+      padding-top: 1rem;
+    }
+    .detail-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--warm);
+      margin-bottom: 0.3rem;
+    }
+    .detail-value, .detail-value a {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .detail-value a:hover { color: var(--accent); }
+
+    /* ── COVER (unchanged from original) ── */
+    .cover-wrap {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto 4rem;
+      padding: 0 3rem;
+      animation: fadeUp 0.7s 0.15s ease both;
+    }
+    .cover-img {
+      width: 100%;
+      height: 480px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #D4C4B0, #A89070);
+      display: flex; align-items: flex-start; justify-content: center;
+      position: relative;
+    }
+    .cover-img img {
+      width: 100%;
+      height: auto;
+      display: block;
+      flex-shrink: 0;
+      animation: scrollDown 12s ease-in-out infinite alternate;
+      transform-origin: top center;
+    }
+    @keyframes scrollDown {
+      0%   { transform: translateY(0); }
+      100% { transform: translateY(calc(-100% + 480px)); }
+    }
+
+    /* ── BODY CONTENT (unchanged from original) ── */
+    .project-body {
+      max-width: 720px;
+      margin: 0 auto 6rem;
+      padding: 0 3rem;
+      animation: fadeUp 0.7s 0.25s ease both;
+    }
+
+    .body-section { margin-bottom: 3.5rem; }
+
+    .body-section h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 1rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid rgba(200,168,130,0.25);
+    }
+
+    .body-section p {
+      font-size: 0.95rem;
+      line-height: 1.85;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .body-section p:last-child { margin-bottom: 0; }
+
+    .body-section li {
+      font-size: 0.95rem;
+      line-height: 1.85;
+      color: var(--muted);
+      margin-left: 30px;
+      margin-bottom: 0.4rem;
+    }
+
+    /* ── GALLERY (unchanged from original) ── */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .gallery-item {
+      aspect-ratio: 4/3;
+      border-radius: 4px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #E0D6C8, #C4B4A0);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .gallery-item span {
+      color: rgba(100,90,80,0.4);
+      font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .gallery-full {
+      width: 100%;
+      aspect-ratio: 16/9;
+      border-radius: 4px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #D8CCBC, #BCA890);
+      display: flex; align-items: center; justify-content: center;
+      margin: 2rem 0;
+    }
+    .gallery-full img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .gallery-full span {
+      color: rgba(100,90,80,0.4);
+      font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+
+    /* ── OUTCOME PILLS (unchanged from original) ── */
+    .outcomes {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      margin-top: 1rem;
+    }
+    .outcome-pill {
+      background: var(--ink);
+      color: var(--cream);
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+    }
+
+    /* ── NEW: CASE STUDY ADDITIONS ── */
+
+    /* Section label / eyebrow */
+    .section-eyebrow {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--warm);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Two-column split inside body */
+    .split-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    /* Problem / Solution card */
+    .ps-card {
+      border: 1px solid rgba(200,168,130,0.25);
+      border-radius: 6px;
+      padding: 1.4rem 1.6rem;
+    }
+    .ps-card .ps-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.7rem;
+    }
+    .ps-card.problem .ps-label { color: #9C3A2E; }
+    .ps-card.solution .ps-label { color: #3A7A52; }
+    .ps-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.6rem;
+      line-height: 1.3;
+    }
+    .ps-card p {
+      font-size: 0.88rem !important;
+      line-height: 1.75 !important;
+      color: var(--muted) !important;
+      margin-bottom: 0 !important;
+    }
+
+    /* Audience table */
+    .audience-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.88rem;
+    }
+    .audience-table th {
+      text-align: left;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--warm);
+      padding: 0.6rem 0.8rem;
+      border-bottom: 1px solid rgba(200,168,130,0.3);
+      font-weight: 400;
+    }
+    .audience-table td {
+      padding: 0.85rem 0.8rem;
+      border-bottom: 1px solid rgba(200,168,130,0.15);
+      color: var(--muted);
+      vertical-align: top;
+      line-height: 1.6;
+    }
+    .audience-table tr:last-child td { border-bottom: none; }
+    .audience-table td:first-child {
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      color: var(--warm);
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    /* Tag pills (inline) */
+    .tag {
+      display: inline-block;
+      border: 1px solid rgba(200,168,130,0.4);
+      color: var(--muted);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      padding: 0.2rem 0.7rem;
+      border-radius: 100px;
+    }
+    .tag.accent { border-color: rgba(181,101,42,0.4); color: var(--accent); }
+
+    /* Homepage anatomy numbered rows */
+    .anatomy-list { list-style: none; margin: 1.2rem 0; }
+    .anatomy-list li {
+      display: flex;
+      gap: 1.2rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(200,168,130,0.15);
+      align-items: flex-start;
+      margin-left: 0 !important;
+    }
+    .anatomy-list li:last-child { border-bottom: none; }
+    .anatomy-n {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--warm);
+      min-width: 28px;
+      padding-top: 1px;
+    }
+    .anatomy-body { flex: 1; }
+    .anatomy-title {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 0.25rem;
+    }
+    .anatomy-why {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 0;
+    }
+    .anatomy-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-top: 0.35rem;
+      display: block;
+    }
+
+    /* Color swatches */
+    .swatch-row {
+      display: flex;
+      gap: 1.2rem;
+      margin: 1.2rem 0;
+      flex-wrap: wrap;
+    }
+    .swatch {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .swatch-dot {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.06);
+      flex-shrink: 0;
+    }
+    .swatch-name {
+      font-size: 0.85rem;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+    .swatch-hex {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* Callout / pull quote */
+    .callout {
+      border-left: 2px solid var(--accent);
+      padding: 1rem 1.5rem;
+      margin: 1.8rem 0;
+      background: rgba(181,101,42,0.04);
+      border-radius: 0 4px 4px 0;
+    }
+    .callout p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem !important;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--ink) !important;
+      line-height: 1.65 !important;
+      margin-bottom: 0 !important;
+    }
+
+    /* What worked / what I'd change */
+    .verdict-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .verdict-col h3 {
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--warm);
+      margin-bottom: 0.8rem;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+    }
+    .verdict-list { list-style: none; }
+    .verdict-list li {
+      font-size: 0.88rem;
+      color: var(--muted);
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(200,168,130,0.15);
+      display: flex;
+      gap: 0.7rem;
+      align-items: flex-start;
+      margin-left: 0 !important;
+      line-height: 1.55;
+    }
+    .verdict-list li:last-child { border-bottom: none; }
+    .verdict-list li .mark {
+      font-size: 0.75rem;
+      padding-top: 1px;
+      flex-shrink: 0;
+    }
+    .mark-yes  { color: #3A7A52; }
+    .mark-next { color: var(--accent); }
+
+    /* Project nav (unchanged from original) */
+    .project-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem 3rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      border-top: 1px solid rgba(200,168,130,0.2);
+    }
+    .proj-nav-link {
+      text-decoration: none;
+      display: flex; flex-direction: column; gap: 0.2rem;
+      color: var(--ink);
+      transition: opacity 0.25s;
+    }
+    .proj-nav-link:hover { opacity: 0.6; }
+    .proj-nav-link .dir {
+      font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted);
+    }
+    .proj-nav-link .title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem; font-weight: 600;
+    }
+    .proj-nav-link.next { text-align: right; }
+
+    footer {
+      text-align: center;
+      padding: 2.5rem 2rem;
+      color: var(--muted);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+    }
+    footer a { color: var(--warm); text-decoration: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .project-hero { grid-template-columns: 1fr; gap: 2rem; padding: 7rem 1.5rem 2rem; }
+      .cover-wrap, .project-body { padding: 0 1.5rem; }
+      .gallery, .split-2, .verdict-2 { grid-template-columns: 1fr; }
+      .project-nav { padding: 2rem 1.5rem; }
+      .swatch-row { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">NAOKI</a>
+  <a class="back-link" href="index.html"><span class="arrow">←</span> All Works</a>
+</nav>
+
+<!-- HERO -->
+<div class="project-hero">
+  <div>
+    <div class="project-meta">
+      <span class="project-number">005</span>
+      <span class="project-category-tag">● UX Case Study</span>
+    </div>
+    <h1 class="project-title">Japanese Body Therapy<br><em>Case Study</em></h1>
+    <p class="project-desc">
+      A breakdown of the design decisions, challenges, and honest reflection behind building the JBT website from scratch.
+    </p>
+  </div>
+
+  <div class="project-details-sidebar">
+    <div class="detail-item">
+      <div class="detail-label">Client</div>
+      <div class="detail-value">Japanese Body Therapy</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">Role</div>
+      <div class="detail-value">Web Designer</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">Platform</div>
+      <div class="detail-value">WordPress</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">Website</div>
+      <div class="detail-value">
+        <a href="https://japanesebodytherapy.com.sg" target="_blank">japanesebodytherapy.com.sg ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COVER IMAGE -->
+<div class="cover-wrap">
+  <div class="cover-img">
+    <!-- Swap src to your screenshot when ready -->
+    <img src="images/jbt-hmp.jpg" alt="Japanese Body Therapy homepage">
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="project-body">
+
+  <!-- ── 01 ABOUT ── -->
+  <div class="body-section">
+    <p class="section-eyebrow">01 — Background</p>
+    <h2>About the client</h2>
+    <p>
+      Japanese Body Therapy is a Japanese-style chiropractic clinic in Singapore, founded by Kizaki Yuta — who comes from a background of managing over 187 osteopathic clinics across Japan. Their method, PM Balance Seitai, targets posture correction, pelvic realignment, and deep muscle adjustment to restore the body's natural structure.
+    </p>
+    <p>
+      This client came through my former company. Their previous website had become inaccessible, so they needed a full rebuild from scratch — logo, color system, content structure, and WordPress development. The primary orange was chosen by the client to match their physical store's existing branding.
+    </p>
+  </div>
+
+  <!-- ── 02 PROBLEM & GOAL ── -->
+  <div class="body-section">
+    <p class="section-eyebrow">02 — Problem &amp; Goal</p>
+    <h2>What needed to be solved</h2>
+    <p>Starting from zero meant no templates, no content structure, no established brand online. At the same time, the client had a clear idea of what he wanted displayed — which sometimes pulled against my instinct for simplicity.</p>
+
+    <div class="split-2">
+      <div class="ps-card problem">
+        <div class="ps-label">Challenge</div>
+        <h3>No website, strong opinions</h3>
+        <p>Build from scratch. Client had specific requirements on content. Two emerging audiences — treatment seekers and franchise investors — with no clear separation.</p>
+      </div>
+      <div class="ps-card solution">
+        <div class="ps-label">Goal</div>
+        <h3>Trust, clarity, bookings</h3>
+        <p>Build enough trust in the first scroll to convert visitors. Surface the right treatment information. Use social proof — reviews and before/afters — to do the convincing.</p>
+      </div>
+    </div>
+
+    <h3 style="font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600; color:var(--ink); margin: 1.5rem 0 0.6rem;">The audience tension</h3>
+    <p>The site was originally built for one audience — people seeking posture treatment. With the later addition of a franchise page, the same site now needs to speak to investors too. These two groups want very different things.</p>
+
+    <table class="audience-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Treatment seekers</th>
+          <th>Franchise investors</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>What they want</td>
+          <td>Proof treatment works, real results, easy booking</td>
+          <td>Business model, ROI, brand credibility</td>
+        </tr>
+        <tr>
+          <td>What they see</td>
+          <td><span class="tag accent">Relevant</span></td>
+          <td><span class="tag">Mixed signals</span></td>
+        </tr>
+        <tr>
+          <td>Ideal fix</td>
+          <td>Optimise current structure</td>
+          <td>Separate landing page or clear nav split</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 03 DESIGN DECISIONS ── -->
+  <div class="body-section">
+    <p class="section-eyebrow">03 — Design Decisions</p>
+    <h2>Homepage anatomy</h2>
+    <p>My default approach is always simplicity — set the target audience first, then build the structure around what they need to see. Here, the client came with content already in mind. So rather than fight it, I focused on sequencing: making sure each section builds logically on the one before, guiding a skeptical visitor toward confidence and action.</p>
+
+    <ul class="anatomy-list">
+      <li>
+        <span class="anatomy-n">01</span>
+        <div class="anatomy-body">
+          <div class="anatomy-title">Hero banner</div>
+          <div class="anatomy-why">Immediately filters the right visitor — "if you're looking for posture correction in Singapore, you're in the right place." Reduces bounce from irrelevant traffic and sets the tone in under 3 seconds.</div>
+          <span class="anatomy-tag">↳ Audience definition</span>
+        </div>
+      </li>
+      <li>
+        <span class="anatomy-n">02</span>
+        <div class="anatomy-body">
+          <div class="anatomy-title">Treatment video</div>
+          <div class="anatomy-why">Shows the therapy in action. For a body clinic, seeing is believing — it reduces the fear of the unknown and makes the first visit feel less intimidating.</div>
+          <span class="anatomy-tag">↳ Reduce friction</span>
+        </div>
+      </li>
+      <li>
+        <span class="anatomy-n">03</span>
+        <div class="anatomy-body">
+          <div class="anatomy-title">Conditions list</div>
+          <div class="anatomy-why">Speaks directly to the visitor's pain — neck pain, back pain, pelvic issues. The moment someone sees their condition listed, they keep reading. Increases scroll depth significantly.</div>
+          <span class="anatomy-tag">↳ Problem-solution match</span>
+        </div>
+      </li>
+      <li>
+        <span class="anatomy-n">04</span>
+        <div class="anatomy-body">
+          <div class="anatomy-title">Before / After gallery</div>
+          <div class="anatomy-why">Visual proof of real, measurable results. Originally far larger — negotiated down to 6 images to protect page speed without losing impact. (See Challenges section.)</div>
+          <span class="anatomy-tag">↳ Visual social proof</span>
+        </div>
+      </li>
+      <li>
+        <span class="anatomy-n">05</span>
+        <div class="anatomy-body">
+          <div class="anatomy-title">Certified professionals</div>
+          <div class="anatomy-why">A short credibility section — founder background, 187+ clinics in Japan. Answers "can I trust these people?" before the visitor has to ask.</div>
+          <span class="anatomy-tag">↳ Authority & credibility</span>
+        </div>
+      </li>
+      <li>
+        <span class="anatomy-n">06</span>
+        <div class="anatomy-body">
+          <div class="anatomy-title">Who it's for</div>
+          <div class="anatomy-why">Desk workers, postpartum mothers, chronic pain sufferers. A second point of identification — if they missed themselves in the conditions list, they might find themselves here.</div>
+          <span class="anatomy-tag">↳ Audience segmentation</span>
+        </div>
+      </li>
+      <li>
+        <span class="anatomy-n">07</span>
+        <div class="anatomy-body">
+          <div class="anatomy-title">Full review section</div>
+          <div class="anatomy-why">A wall of real, named customer reviews in both English and Japanese. The sheer volume becomes a signal — this many people can't all be wrong. Closes the page with strong conviction.</div>
+          <span class="anatomy-tag">↳ Volume social proof</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ── 04 VISUAL DESIGN ── -->
+  <div class="body-section">
+    <p class="section-eyebrow">04 — Visual Design</p>
+    <h2>Color &amp; branding</h2>
+    <p>The primary orange came directly from the client — it mirrors the physical store's color scheme, so the website feels like a natural extension of the in-person experience. The rest of the palette stays neutral to let the orange carry the brand weight without competing.</p>
+
+    <div class="swatch-row">
+      <div class="swatch">
+        <div class="swatch-dot" style="background:#E85D24;"></div>
+        <div>
+          <div class="swatch-name">Brand Orange</div>
+          <div class="swatch-hex">#E85D24 — CTAs, accents, logo</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-dot" style="background:#1A1714;"></div>
+        <div>
+          <div class="swatch-name">Deep Ink</div>
+          <div class="swatch-hex">#1A1714 — headings, body text</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-dot" style="background:#F5F0E8; border:1px solid #ddd;"></div>
+        <div>
+          <div class="swatch-name">Warm Cream</div>
+          <div class="swatch-hex">#F5F0E8 — page background</div>
+        </div>
+      </div>
+    </div>
+
+   
+  </div>
+
+  <!-- ── 05 CHALLENGES ── -->
+  <div class="body-section">
+    <p class="section-eyebrow">05 — Challenges</p>
+    <h2>What went wrong, and how I handled it</h2>
+
+    <div class="split-2" style="margin-bottom: 1rem;">
+      <div class="ps-card problem">
+        <div class="ps-label">Challenge 01</div>
+        <h3>Content overload</h3>
+        <p>The client initially wanted a very large before/after gallery — as long as the full review section. This caused serious page load issues and hurt the scroll experience before visitors even reached the reviews.</p>
+      </div>
+      <div class="ps-card solution">
+        <div class="ps-label">Resolution</div>
+        <h3>Negotiated to 6 images</h3>
+        <p>Communicated the loading speed impact to the consultant, who relayed it to the client. Reduced to 6 high-quality images — enough visual proof without killing performance.</p>
+      </div>
+    </div>
+
+    <div class="split-2">
+      <div class="ps-card problem">
+        <div class="ps-label">Challenge 02</div>
+        <h3>Client-directed structure</h3>
+        <p>The client had strong opinions on what to display and how. This constrained my ability to pursue a simpler, more conversion-focused layout.</p>
+      </div>
+      <div class="ps-card solution">
+        <div class="ps-label">Resolution</div>
+        <h3>Work within the brief</h3>
+        <p>Accepted the content requirements and focused on sequencing, spacing, and visual hierarchy — making the existing content as clean and readable as possible.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 06 REFLECTION ── -->
+  <div class="body-section">
+    <p class="section-eyebrow">06 — Reflection</p>
+    <h2>What I think about this website</h2>
+
+    <div class="callout">
+      <p>"I honestly want to revamp the whole thing. With the franchise page added, we now have two target audiences — and the same content doesn't serve both. The fundamental question the site can't currently answer is: who is this actually for?"</p>
+    </div>
+
+    <div class="verdict-2">
+      <div class="verdict-col">
+        <h3>What worked</h3>
+        <ul class="verdict-list">
+          <li><span class="mark mark-yes">✓</span> Hero clearly defines the visitor</li>
+          <li><span class="mark mark-yes">✓</span> Review volume builds real credibility</li>
+          <li><span class="mark mark-yes">✓</span> Before/after is convincing at 6 images</li>
+          <li><span class="mark mark-yes">✓</span> Bilingual (EN / JP) serves the market</li>
+          <li><span class="mark mark-yes">✓</span> Orange branding matches physical store</li>
+        </ul>
+      </div>
+      <div class="verdict-col">
+        <h3>What I'd change</h3>
+        <ul class="verdict-list">
+          <li><span class="mark mark-next">→</span> Separate patient and franchise journeys</li>
+          <li><span class="mark mark-next">→</span> Reduce homepage content density</li>
+          <li><span class="mark mark-next">→</span> Add a booking CTA above the fold</li>
+          <li><span class="mark mark-next">→</span> Better image optimisation for speed</li>
+          <li><span class="mark mark-next">→</span> Clearer information architecture overall</li>
+        </ul>
+      </div>
+    </div>
+
+    <p>Which is why I decided to break down my thoughts on this website in a separate, deeper case study.</p>
+    <p><a href="jbt-ux-casestudy.html" style="color: var(--accent); text-decoration: underline;">Click here to view JBT Website Breakdown Case Study →</a></p>
+  </div>
+
+</div>
+
+<!-- PROJECT NAV -->
+<div class="project-nav">
+  <a class="proj-nav-link" href="index.html">
+    <span class="dir">← Back</span>
+    <span class="title">All Works</span>
+  </a>
+  <a class="proj-nav-link next" href="jbt.html">
+    <span class="dir">View project →</span>
+    <span class="title">JBT Web Design</span>
+  </a>
+</div>
+
+<footer>
+  <p>© 2026 Nur Azimah &nbsp;·&nbsp; Designed with structure &nbsp;·&nbsp; </p>
+</footer>
+
+</body>
+</html>

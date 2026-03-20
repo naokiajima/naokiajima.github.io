@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JBT UX Enhancement Proposal — Nur Azimah</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F5F0E8;
+      --ink: #1A1714;
+      --warm: #C8A882;
+      --muted: #8A7F74;
+      --accent: #B5652A;
+      --red-bg: #FAF0EE;
+      --red-text: #7A2E2E;
+      --red-border: rgba(122,46,46,0.18);
+      --green-bg: #EEF5F2;
+      --green-text: #2A5A4A;
+      --green-border: rgba(42,90,74,0.18);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.4rem 3rem;
+      background: rgba(245,240,232,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(200,168,130,0.2);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; font-weight: 600; letter-spacing: 0.04em;
+      color: var(--ink); text-decoration: none;
+    }
+    .back-link {
+      text-decoration: none; color: var(--muted);
+      font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+      display: flex; align-items: center; gap: 0.5rem; transition: color 0.3s;
+    }
+    .back-link:hover { color: var(--ink); }
+    .back-link .arrow { font-size: 1rem; transition: transform 0.3s; }
+    .back-link:hover .arrow { transform: translateX(-3px); }
+
+    /* ─── HERO ─── */
+    .project-hero {
+      padding: 8rem 3rem 4rem; max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: end;
+      animation: fadeUp 0.7s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .project-meta { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.2rem; }
+    .project-number { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--warm); }
+    .project-category-tag {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: transparent; border: 1px solid rgba(200,168,130,0.5);
+      color: var(--muted); font-size: 0.7rem; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 0.3rem 0.8rem; border-radius: 100px; width: fit-content;
+    }
+    .project-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 5vw, 4.2rem); font-weight: 700;
+      line-height: 1.0; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 1.2rem;
+    }
+    .project-title em { font-style: italic; font-weight: 300; color: var(--accent); }
+    .project-desc { font-size: 0.95rem; line-height: 1.8; color: var(--muted); max-width: 440px; }
+    .project-details-sidebar { display: flex; flex-direction: column; gap: 1.5rem; padding-bottom: 0.5rem; }
+    .detail-item { border-top: 1px solid rgba(200,168,130,0.25); padding-top: 1rem; }
+    .detail-label { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--warm); margin-bottom: 0.3rem; }
+    .detail-value, .detail-value a {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; color: var(--ink); text-decoration: none;
+    }
+    .detail-value a:hover { color: var(--accent); }
+
+    /* ─── BODY ─── */
+    .project-body {
+      max-width: 760px; margin: 0 auto 6rem; padding: 0 3rem;
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+    .body-section { margin-bottom: 4.5rem; }
+    .body-section h2 {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 600;
+      color: var(--ink); margin-bottom: 1rem; padding-bottom: 0.6rem;
+      border-bottom: 1px solid rgba(200,168,130,0.25);
+    }
+    .body-section p {
+      font-size: 0.95rem; line-height: 1.85; color: var(--muted); margin-bottom: 1rem;
+    }
+    .body-section p:last-child { margin-bottom: 0; }
+    .eyebrow {
+      font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--warm); margin-bottom: 0.5rem; display: block;
+    }
+
+    /* ─── CONTEXT CALLOUT ─── */
+    .callout {
+      border-left: 2px solid var(--accent);
+      padding: 1rem 1.5rem; margin: 1.5rem 0;
+      background: rgba(181,101,42,0.05); border-radius: 0 4px 4px 0;
+    }
+    .callout p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem !important; font-style: italic; font-weight: 400;
+      color: var(--ink) !important; line-height: 1.65 !important; margin-bottom: 0 !important;
+    }
+
+    /* ─── USER PROFILE CARD ─── */
+    .user-profile {
+      border: 1px solid rgba(200,168,130,0.25); border-radius: 6px;
+      padding: 1.4rem 1.6rem; margin: 1.5rem 0;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;
+    }
+    .up-item { display: flex; flex-direction: column; gap: 0.3rem; }
+    .up-label { font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--warm); }
+    .up-val { font-size: 0.88rem; color: var(--muted); line-height: 1.55; }
+
+    /* ─── UX OBJECTIVES GRID ─── */
+    .obj-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1.5rem 0;
+    }
+    .obj-item {
+      border: 1px solid rgba(200,168,130,0.2); border-radius: 5px;
+      padding: 0.85rem 1rem; display: flex; gap: 0.8rem; align-items: flex-start;
+    }
+    .obj-dot {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+      margin-top: 5px; flex-shrink: 0;
+    }
+    .obj-text { font-size: 0.85rem; color: var(--muted); line-height: 1.55; }
+
+    /* ─── DIVIDER ─── */
+    .section-divide {
+      display: flex; align-items: center; gap: 1rem; margin: 3.5rem 0 2.5rem;
+    }
+    .section-divide .sd-label {
+      font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+      white-space: nowrap; color: var(--warm); font-weight: 400;
+    }
+    .section-divide::before, .section-divide::after {
+      content: ''; flex: 1; height: 1px; background: rgba(200,168,130,0.3);
+    }
+
+    /* ─── CURRENT FLOW ─── */
+    .flow-list {
+      display: flex; flex-direction: column; gap: 0;
+      border: 1px solid rgba(200,168,130,0.22); border-radius: 6px; overflow: hidden;
+      margin: 1.5rem 0;
+    }
+    .flow-step {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 0.85rem 1.2rem;
+      border-bottom: 1px solid rgba(200,168,130,0.12);
+    }
+    .flow-step:last-child { border-bottom: none; }
+    .flow-step.is-bad { background: var(--red-bg); }
+    .flow-n {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.9rem; font-weight: 600; color: var(--warm); min-width: 22px;
+    }
+    .flow-label { font-size: 0.88rem; color: var(--ink); flex: 1; font-weight: 400; }
+    .flow-flag {
+      font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.18rem 0.65rem; border-radius: 100px; flex-shrink: 0;
+    }
+    .flag-ok   { background: rgba(200,168,130,0.12); color: var(--muted); }
+    .flag-bad  { background: var(--red-bg); color: var(--red-text); border: 1px solid var(--red-border); }
+
+    /* ─── PROBLEM CHIPS ─── */
+    .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.2rem 0; }
+    .chip {
+      font-size: 0.72rem; letter-spacing: 0.04em; padding: 0.3rem 0.85rem; border-radius: 100px;
+    }
+    .chip-bad  { background: var(--red-bg); color: var(--red-text); border: 1px solid var(--red-border); }
+    .chip-good { background: var(--green-bg); color: var(--green-text); border: 1px solid var(--green-border); }
+    .chip-warm { background: rgba(200,168,130,0.12); color: var(--muted); border: 1px solid rgba(200,168,130,0.3); }
+
+    /* ─── FATIGUE BANNER ─── */
+    .fatigue {
+      background: var(--red-bg); border: 1px solid var(--red-border);
+      border-radius: 5px; padding: 0.9rem 1.2rem;
+      display: flex; align-items: flex-start; gap: 0.8rem; margin: 1.2rem 0;
+    }
+    .fatigue-ico { font-size: 1rem; flex-shrink: 0; padding-top: 1px; }
+    .fatigue p { font-size: 0.85rem; color: var(--red-text); line-height: 1.6; margin-bottom: 0 !important; }
+    .fatigue p strong { font-weight: 500; }
+
+    /* ─── PROPOSED SECTION CARDS ─── */
+    .proposal-list { display: flex; flex-direction: column; gap: 1px; margin: 1.5rem 0;
+      border: 1px solid rgba(200,168,130,0.22); border-radius: 6px; overflow: hidden; }
+
+    .pcard { background: var(--cream); border-bottom: 1px solid rgba(200,168,130,0.12); }
+    .pcard:last-child { border-bottom: none; }
+
+    .pcard-head {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1.05rem 1.4rem; cursor: pointer; user-select: none;
+      transition: background 0.18s;
+    }
+    .pcard-head:hover { background: rgba(200,168,130,0.07); }
+    .pcard.open .pcard-head { background: rgba(200,168,130,0.06); }
+
+    .pc-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem; font-weight: 600; color: var(--warm); min-width: 30px;
+    }
+    .pc-text { flex: 1; }
+    .pc-title { font-size: 0.92rem; font-weight: 500; color: var(--ink); margin-bottom: 0.1rem; }
+    .pc-goal  { font-size: 0.75rem; color: var(--muted); }
+    .pc-tag {
+      font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.2rem 0.65rem; border-radius: 100px; flex-shrink: 0;
+      background: var(--green-bg); color: var(--green-text); border: 1px solid var(--green-border);
+    }
+    .pc-arrow { font-size: 0.7rem; color: var(--muted); transition: transform 0.22s; flex-shrink: 0; }
+    .pcard.open .pc-arrow { transform: rotate(180deg); }
+
+    .pcard-body {
+      display: none; padding: 0 1.4rem 1.4rem 1.4rem;
+      border-top: 1px solid rgba(200,168,130,0.12);
+    }
+    .pcard.open .pcard-body { display: block; }
+
+    /* wireframe block inside card */
+    .wire {
+      background: #fff; border: 1px solid rgba(200,168,130,0.2);
+      border-radius: 4px; padding: 0.9rem 1.1rem; margin: 1rem 0 0.9rem;
+    }
+    .wire-eyebrow {
+      font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--warm); margin-bottom: 0.55rem;
+    }
+    .wire-row {
+      display: flex; align-items: flex-start; gap: 0.6rem;
+      padding: 0.28rem 0; border-bottom: 1px dashed rgba(200,168,130,0.18);
+      font-size: 0.82rem; color: var(--muted); line-height: 1.5;
+    }
+    .wire-row:last-child { border-bottom: none; }
+    .wd { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+    .wd-warm  { background: var(--warm); }
+    .wd-green { background: #3A7A52; }
+    .wd-red   { background: var(--red-text); }
+
+    .pcard-body p {
+      font-size: 0.88rem; line-height: 1.78; color: var(--muted);
+      margin-bottom: 0.7rem;
+    }
+    .pcard-body p:last-child { margin-bottom: 0; }
+
+    .improve-note {
+      display: flex; gap: 0.6rem; align-items: flex-start;
+      padding: 0.65rem 0.9rem; background: var(--green-bg);
+      border-radius: 4px; margin-top: 0.7rem;
+    }
+    .improve-note .in-ico { font-size: 0.78rem; flex-shrink: 0; padding-top: 1px; color: var(--green-text); }
+    .improve-note p { font-size: 0.8rem !important; color: var(--green-text) !important;
+      margin-bottom: 0 !important; line-height: 1.6 !important; }
+
+    /* ─── UX PRINCIPLES ─── */
+    .principles-grid {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.7rem; margin: 1.5rem 0;
+    }
+    .principle {
+      border: 1px solid rgba(200,168,130,0.22); border-radius: 5px;
+      padding: 0.9rem 1rem;
+    }
+    .principle-label {
+      font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.35rem;
+    }
+    .principle-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.55; }
+
+    /* ─── COMPARE TABLE ─── */
+    .compare-table {
+      width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.85rem;
+    }
+    .compare-table th {
+      text-align: left; font-size: 0.63rem; letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 0.6rem 0.9rem; border-bottom: 1px solid rgba(200,168,130,0.3); font-weight: 400;
+    }
+    .compare-table th:first-child { color: var(--warm); }
+    .compare-table th.bad  { color: var(--red-text); }
+    .compare-table th.good { color: var(--green-text); }
+    .compare-table td {
+      padding: 0.8rem 0.9rem; border-bottom: 1px solid rgba(200,168,130,0.1);
+      color: var(--muted); vertical-align: top; line-height: 1.55;
+    }
+    .compare-table td:first-child { color: var(--ink); font-weight: 400; width: 26%; font-size: 0.82rem; }
+    .compare-table td.bad-v  { color: var(--red-text); background: rgba(122,46,46,0.025); }
+    .compare-table td.good-v { color: var(--green-text); }
+    .compare-table tr:last-child td { border-bottom: none; }
+
+    /* ─── EXPECTED OUTCOMES ─── */
+    .outcomes-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin: 1.5rem 0;
+    }
+    .outcome-item {
+      border: 1px solid var(--green-border); border-radius: 5px;
+      padding: 0.9rem 1.1rem; background: var(--green-bg);
+      display: flex; gap: 0.8rem; align-items: flex-start;
+    }
+    .outcome-ico { font-size: 0.75rem; color: var(--green-text); padding-top: 2px; flex-shrink: 0; }
+    .outcome-text { font-size: 0.83rem; color: var(--green-text); line-height: 1.55; }
+	  
+	   /* COVER */
+    .cover-wrap {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto 4rem;
+      padding: 0 3rem;
+      animation: fadeUp 0.7s 0.15s ease both;
+    }
+    .cover-img {
+      width: 100%;
+      height: 480px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #D4C4B0, #A89070);
+      display: flex; align-items: flex-start; justify-content: center;
+      position: relative;
+    }
+    .cover-img img {
+      width: 100%;
+      height: auto;
+      display: block;
+      flex-shrink: 0;
+      animation: scrollDown 12s ease-in-out infinite alternate;
+      transform-origin: top center;
+    }
+
+    /* ─── FOOTER NAV ─── */
+    .project-nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 2rem 3rem; max-width: 1100px; margin: 0 auto;
+      border-top: 1px solid rgba(200,168,130,0.2);
+    }
+    .proj-nav-link {
+      text-decoration: none; display: flex; flex-direction: column; gap: 0.2rem;
+      color: var(--ink); transition: opacity 0.25s;
+    }
+    .proj-nav-link:hover { opacity: 0.6; }
+    .proj-nav-link .dir { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+    .proj-nav-link .title { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 600; }
+    .proj-nav-link.next { text-align: right; }
+
+    footer {
+      text-align: center; padding: 2.5rem 2rem;
+      color: var(--muted); font-size: 0.78rem; letter-spacing: 0.08em;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 700px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .project-hero { grid-template-columns: 1fr; gap: 2rem; padding: 7rem 1.5rem 2rem; }
+      .project-body { padding: 0 1.5rem; }
+      .obj-grid, .user-profile, .principles-grid, .outcomes-grid, .compare-split { grid-template-columns: 1fr; }
+      .project-nav { padding: 2rem 1.5rem; flex-direction: column; gap: 1.5rem; align-items: flex-start; }
+      .proj-nav-link.next { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">NAOKI</a>
+  <a class="back-link" href="jbt.html"><span class="arrow">←</span> JBT Project</a>
+</nav>
+
+<!-- HERO -->
+<div class="project-hero">
+  <div>
+    <div class="project-meta">
+      <span class="project-number">005 — UX Enhancement</span>
+      <span class="project-category-tag">● Case Study</span>
+    </div>
+    <h1 class="project-title">JBT Homepage<br><em>UX Proposal</em></h1>
+    <p class="project-desc">
+      I built this website. Then I audited it as a UX problem — identifying what wasn't working for users and redesigning the homepage flow from first principle.
+    </p>
+  </div>
+  <div class="project-details-sidebar">
+    <div class="detail-item">
+      <div class="detail-label">Type</div>
+      <div class="detail-value">UX Enhancement Proposal</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">Focus</div>
+      <div class="detail-value">Homepage redesign, IA, user flow</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">Live Site</div>
+      <div class="detail-value">
+        <a href="https://japanesebodytherapy.com.sg" target="_blank">japanesebodytherapy.com.sg ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="project-body">
+
+	<!-- COVER IMAGE -->
+<div class="cover-wrap">
+  <div class="cover-img">
+    <img src="images/jbt-hmp.jpg" alt="Project cover">
+  </div>
+</div>
+
+	
+  <!-- ── CONTEXT ── -->
+  <div class="body-section">
+    <span class="eyebrow">Background</span>
+    <h2>Why I'm proposing this</h2>
+    <p>
+      I designed and built the JBT website from scratch — logo, color system, content architecture, and WordPress development. The site serves a wellness clinic offering posture correction and scoliosis-related therapy in Singapore.
+    </p>
+    <p>
+      As the business evolved, a franchise section was added to the same homepage. What started as a single-audience site now tries to speak to treatment-seeking patients and franchise investors simultaneously — without any structural separation. The result is a homepage that is content-heavy, hard to scan, and unclear about who it is actually for.
+    </p>
+    <div class="callout">
+      <p>"I honestly want to revamp the whole thing. With the franchise page added, we now have two target audiences. Who is the main target audience on this website?"</p>
+    </div>
+    <p>
+      This proposal presents a full redesign of the homepage structure — grounded in UX objectives defined for the primary audience: busy working adults dealing with posture or back pain.
+    </p>
+  </div>
+
+  <!-- ── USER PROFILE ── -->
+  <div class="body-section">
+    <span class="eyebrow">Primary Audience</span>
+    <h2>Who we're designing for</h2>
+    <p>All design decisions in this proposal are anchored to one primary user type: the working adult with posture or back pain, encountering JBT for the first time.</p>
+    <div class="user-profile">
+      <div class="up-item">
+        <span class="up-label">Profile</span>
+        <span class="up-val">Working adults or seniors</span>
+      </div>
+      <div class="up-item">
+        <span class="up-label">Problem</span>
+        <span class="up-val">Posture pain, back pain, neck stiffness — often chronic and worsening</span>
+      </div>
+      <div class="up-item">
+        <span class="up-label">Behaviour</span>
+        <span class="up-val">Scans rather than reads. Looks for proof. Needs reassurance before booking.</span>
+      </div>
+      <div class="up-item">
+        <span class="up-label">Barrier</span>
+        <span class="up-val">Fear of the unknown. Unsure if this therapy is right for them. Needs a clear next step.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── UX OBJECTIVES ── -->
+  <div class="body-section">
+    <span class="eyebrow">UX Objectives</span>
+    <h2>What this redesign must achieve</h2>
+    <div class="obj-grid">
+      <div class="obj-item"><div class="obj-dot"></div><div class="obj-text">Clarify what the therapy is within the first screen</div></div>
+      <div class="obj-item"><div class="obj-dot"></div><div class="obj-text">Separate informational reassurance from conversion moments</div></div>
+      <div class="obj-item"><div class="obj-dot"></div><div class="obj-text">Reduce excessive scrolling fatigue</div></div>
+      <div class="obj-item"><div class="obj-dot"></div><div class="obj-text">Improve page performance perception</div></div>
+      <div class="obj-item"><div class="obj-dot"></div><div class="obj-text">Create progressive disclosure of trust signals</div></div>
+      <div class="obj-item"><div class="obj-dot"></div><div class="obj-text">Guide users through a logical decision journey</div>
+		</div>
+		 <div class="obj-item"><div class="obj-dot"></div><div class="obj-text">Navigation to remain simple and addresses their needs</div></div>
+    </div>
+  </div>
+
+  <!-- ── CURRENT STATE ── -->
+  <div class="section-divide"><span class="sd-label">Current state</span></div>
+
+  <div class="body-section">
+    <span class="eyebrow">01 — Problem Audit</span>
+    <h2>What the user experiences today</h2>
+    <p>This is the current homepage in sequence. A first-time visitor arrives with back pain, ready to find out if JBT can help. This is what they walk through before reaching any actionable next step.</p>
+
+    <div class="flow-list">
+      <div class="flow-step"><span class="flow-n">1</span><span class="flow-label">Hero banner</span><span class="flow-flag flag-ok">Relevant</span></div>
+      <div class="flow-step"><span class="flow-n">2</span><span class="flow-label">Explanatory text block</span><span class="flow-flag flag-ok">Useful</span></div>
+      <div class="flow-step"><span class="flow-n">3</span><span class="flow-label">Treatment video</span><span class="flow-flag flag-ok">Good</span></div>
+      <div class="flow-step is-bad"><span class="flow-n">4</span><span class="flow-label">Long list of conditions — 12+ items in plain text</span><span class="flow-flag flag-bad">Hard to scan</span></div>
+      <div class="flow-step is-bad"><span class="flow-n">5</span><span class="flow-label">Before &amp; After image gallery — all images loaded at once</span><span class="flow-flag flag-bad">Slow load</span></div>
+      <div class="flow-step"><span class="flow-n">6</span><span class="flow-label">Credentials &amp; professionals writeup</span><span class="flow-flag flag-ok">Useful</span></div>
+      <div class="flow-step is-bad"><span class="flow-n">7</span><span class="flow-label">30+ customer reviews displayed in full</span><span class="flow-flag flag-bad">Overload</span></div>
+      <div class="flow-step is-bad"><span class="flow-n">8</span><span class="flow-label">More reviews. Franchise content mixed in. Still no clear CTA.</span><span class="flow-flag flag-bad">User fatigue</span></div>
+    </div>
+
+    <div class="fatigue">
+      <span class="fatigue-ico">↓</span>
+      <div>
+        <p><strong>Result:</strong> The user reaches the bottom exhausted, without a clear booking prompt presented at the right moment. The most important action — booking a consultation — is buried after 30+ reviews and franchise content aimed at a completely different audience.</p><br>
+		  <p>Whatsapp icon at the bottom only for booking, no indication of inquiry for user to ask if they are suitable to do this treatment before deciding to book.</p>
+      </div>
+    </div>
+
+    <div class="chips">
+      <span class="chip chip-bad">No CTA above the fold</span>
+      <span class="chip chip-bad">Unclear who this is for</span>
+      <span class="chip chip-bad">Hard to scan conditions list</span>
+      <span class="chip chip-bad">Slow image load</span>
+      <span class="chip chip-bad">Review overload</span>
+      <span class="chip chip-bad">Franchise mixed with treatment</span>
+      <span class="chip chip-bad">No treatment process explained</span>
+    </div>
+  </div>
+
+  <!-- ── PROPOSED ── -->
+  <div class="section-divide"><span class="sd-label">Proposed redesign</span></div>
+
+  <div class="body-section">
+    <span class="eyebrow">02 — Proposed Structure</span>
+    <h2>Redesigned homepage flow</h2>
+    <p>The redesigned structure is built around one principle: each section has a single job, and the order follows the user's natural decision journey — from "is this for me?" to "I'm ready to book."</p>
+    <p>Expand each section to see the wireframe, rationale, and what changes from the current site.</p>
+
+    <div class="proposal-list">
+
+      <!-- 1: Hero -->
+      <div class="pcard open">
+        <div class="pcard-head" onclick="toggle(this)">
+          <span class="pc-num">1</span>
+          <div class="pc-text">
+            <div class="pc-title">Hero Section</div>
+            <div class="pc-goal">Purpose: Immediate relevance confirmation</div>
+          </div>
+          <span class="pc-tag">Clarity</span>
+          <span class="pc-arrow">▾</span>
+        </div>
+        <div class="pcard-body">
+          <div class="wire">
+            <div class="wire-eyebrow">Content structure</div>
+            <div class="wire-row"><span class="wd wd-warm"></span> Headline: "Relieve Posture Pain with Japanese Body Therapy"</div>
+            <div class="wire-row"><span class="wd wd-warm"></span> Subtext: Specialised posture correction and body alignment therapy in Singapore</div>
+            <div class="wire-row"><span class="wd wd-green"></span> Primary CTA: Book Consultation</div>
+            <div class="wire-row"><span class="wd wd-warm"></span> Secondary CTA: Learn How It Works</div>
+          </div>
+          <p>The hero has one job: confirm within 3 seconds that this service is for people with posture or back pain. The headline states the problem and the solution. The two CTAs serve two mindsets — the visitor who is ready to book, and the visitor who needs more information first. Neither gets left behind.</p>
+          <div class="improve-note">
+            <span class="in-ico">↑</span>
+            <p>Currently, the first booking CTA appears after 30+ reviews — well below the fold. This brings it to screen one.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2: Conditions -->
+      <div class="pcard">
+        <div class="pcard-head" onclick="toggle(this)">
+          <span class="pc-num">2</span>
+          <div class="pc-text">
+            <div class="pc-title">Conditions Treated</div>
+            <div class="pc-goal">Purpose: Quick self-identification</div>
+          </div>
+          <span class="pc-tag">Scannable</span>
+          <span class="pc-arrow">▾</span>
+        </div>
+        <div class="pcard-body">
+          <div class="wire">
+            <div class="wire-eyebrow">Content structure</div>
+            <div class="wire-row"><span class="wd wd-warm"></span> Visual icon grid — 6 to 8 conditions maximum</div>
+            <div class="wire-row"><span class="wd wd-warm"></span> Back pain · Neck stiffness · Pelvic imbalance · Posture correction</div>
+            <div class="wire-row"><span class="wd wd-warm"></span> Shoulder tension · Headaches · Postpartum recovery · Scoliosis support</div>
+            <div class="wire-row"><span class="wd wd-green"></span> Each tile: icon + short label only. No descriptions at this stage.</div>
+          </div>
+          <p>The current version lists conditions as a dense text block. A user with neck pain scanning a 12-item paragraph has to work to find themselves in it. A visual grid lets the same user confirm relevance in under 5 seconds — which is the threshold before bounce.</p>
+          <div class="improve-note">
+            <span class="in-ico">↑</span>
+            <p>Replaces the long plain-text conditions list with a scannable icon grid. Faster to read, and easier to self-identify.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3: Treatment Process -->
+      <div class="pcard">
+        <div class="pcard-head" onclick="toggle(this)">
+          <span class="pc-num">3</span>
+          <div class="pc-text">
+            <div class="pc-title">How Treatment Works</div>
+            <div class="pc-goal">Purpose: Reduce fear of the unknown</div>
+          </div>
+          <span class="pc-tag">Reassurance</span>
+          <span class="pc-arrow">▾</span>
+        </div>
+        <div class="pcard-body">
+          <div class="wire">
+            <div class="wire-eyebrow">Content structure</div>
+            <div class="wire-row"><span class="wd wd-warm"></span> Step 1 — Consultation &amp; assessment: We identify your posture imbalances</div>
+            <div class="wire-row"><span class="wd wd-warm"></span> Step 2 — Body alignment therapy: Targeted correction using PM Balance Seitai</div>
+            <div class="wire-row"><span class="wd wd-green"></span> Step 3 — Follow-up &amp; improvement tracking: Progress monitored each session</div>
+          </div>
+          <p>Many first-time visitors have never tried chiropractic or body therapy. They don't know what will happen when they walk in. This section removes that uncertainty by showing a simple, predictable 3-step journey. In wellness UX, reducing fear of the unknown is one of the highest-impact conversion levers available.</p>
+          <p>This section does not currently exist on the homepage.</p>
+          <div class="improve-note">
+            <span class="in-ico">↑</span>
+            <p>New section. Directly addresses "what actually happens when I go there?" — one of the most common hesitations before a first wellness booking.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4: Before After -->
+      <div class="pcard">
+        <div class="pcard-head" onclick="toggle(this)">
+          <span class="pc-num">4</span>
+          <div class="pc-text">
+            <div class="pc-title">Before &amp; After Results</div>
+            <div class="pc-goal">Purpose: Confidence without performance penalty</div>
+          </div>
+          <span class="pc-tag">Proof</span>
+          <span class="pc-arrow">▾</span>
+        </div>
+        <div class="pcard-body">
+          <div class="wire">
+            <div class="wire-eyebrow">Content structure</div>
+            <div class="wire-row"><span class="wd wd-warm"></span> 3 transformation pairs shown by default — lazy loaded</div>
+            <div class="wire-row"><span class="wd wd-warm"></span> Each pair: Condition treated + number of sessions as caption</div>
+            <div class="wire-row"><span class="wd wd-green"></span> "View more results" — expands inline without page reload</div>
+          </div>
+          <p>Visual proof of results is essential in wellness UX — it converts where text cannot. The current gallery loads all images simultaneously, which directly impacts perceived page speed. Displaying 3 compelling examples by default with progressive reveal keeps the proof front and centre without the performance cost.</p>
+          <p>Adding a caption — condition and session count — makes each example immediately meaningful. It answers: "Has this worked for someone like me?"</p>
+          <div class="improve-note">
+            <span class="in-ico">↑</span>
+            <p>Reduces initial image load significantly. The proof is still present — it is just not frontloaded all at once.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5: Credibility -->
+      <div class="pcard">
+        <div class="pcard-head" onclick="toggle(this)">
+          <span class="pc-num">5</span>
+          <div class="pc-text">
+            <div class="pc-title">Therapist Credibility</div>
+            <div class="pc-goal">Purpose: Build emotional trust</div>
+          </div>
+          <span class="pc-tag">Trust</span>
+          <span class="pc-arrow">▾</span>
+        </div>
+        <div class="pcard-body">
+          <div class="wire">
+            <div class="wire-eyebrow">Content structure</div>
+            <div class="wire-row"><span class="wd wd-warm"></span> Therapist photo — real, human, not stock</div>
+            <div class="wire-row"><span class="wd wd-warm"></span> Name, specialisation, years of experience</div>
+            <div class="wire-row"><span class="wd wd-warm"></span> Founder background: 187+ clinics in Japan</div>
+            <div class="wire-row"><span class="wd wd-green"></span> Certifications or training — concise, credible, not a full CV</div>
+          </div>
+          <p>In wellness UX, people need to trust the practitioner before they trust the treatment. A real face, a real name, and a clear credential does far more than a descriptive paragraph. This section must feel human — not a corporate "about us" block. It is the emotional anchor before the user reaches the booking CTA.</p>
+          <p>Currently this information appears as a short text block with no face attached to it. Putting a face to the expertise changes the emotional quality of the trust signal significantly.</p>
+        </div>
+      </div>
+
+      <!-- 6: Testimonials -->
+      <div class="pcard">
+        <div class="pcard-head" onclick="toggle(this)">
+          <span class="pc-num">6</span>
+          <div class="pc-text">
+            <div class="pc-title">Customer Testimonials</div>
+            <div class="pc-goal">Purpose: Emotional reassurance — without overwhelm</div>
+          </div>
+          <span class="pc-tag">Social proof</span>
+          <span class="pc-arrow">▾</span>
+        </div>
+        <div class="pcard-body">
+          <div class="wire">
+            <div class="wire-eyebrow">Content structure</div>
+            <div class="wire-row"><span class="wd wd-green"></span> Average star rating — prominently displayed (e.g. 4.9 / 5 · 80+ reviews)</div>
+            <div class="wire-row"><span class="wd wd-warm"></span> 3–4 selected testimonials — chosen for emotional range and specificity</div>
+            <div class="wire-row"><span class="wd wd-warm"></span> Each review: name, condition, outcome — short and scannable</div>
+            <div class="wire-row"><span class="wd wd-green"></span> "Read all reviews" — expandable inline, not a new page</div>
+          </div>
+          <p>Displaying 30+ reviews in full is counterproductive. It overwhelms the reader, pushes the conversion CTA far down the page, and creates scroll fatigue right before the moment of action. A prominently displayed average rating communicates the same confidence signal immediately.</p>
+          <p>Selected testimonials provide the emotional specificity — "this worked for someone with my exact problem." The expandable section keeps the full list accessible for visitors who want depth, without forcing it on everyone.</p>
+          <div class="improve-note">
+            <span class="in-ico">↑</span>
+            <p>Reduces review section from 30+ full entries to a star rating + 4 selected reviews. The trust signal is stronger, and the conversion CTA is no longer buried beneath it.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7: Booking CTA -->
+      <div class="pcard">
+        <div class="pcard-head" onclick="toggle(this)">
+          <span class="pc-num">7</span>
+          <div class="pc-text">
+            <div class="pc-title">Booking CTA Section</div>
+            <div class="pc-goal">Purpose: Natural, friction-free action trigger</div>
+          </div>
+          <span class="pc-tag">Conversion</span>
+          <span class="pc-arrow">▾</span>
+        </div>
+        <div class="pcard-body">
+          <div class="wire">
+            <div class="wire-eyebrow">Content structure</div>
+            <div class="wire-row"><span class="wd wd-green"></span> Primary CTA: Book Appointment — prominent, unmissable</div>
+            <div class="wire-row"><span class="wd wd-warm"></span> Secondary options: Call us · WhatsApp us</div>
+            <div class="wire-row"><span class="wd wd-warm"></span> Location — Suntec City Mall, Singapore</div>
+            <div class="wire-row"><span class="wd wd-warm"></span> Reception hours — 10am to 8pm</div>
+          </div>
+          <p>By this point the user has confirmed the therapy is for them, understands what happens in a session, seen real results, and trusts the practitioner. The booking section should feel like the natural next step — not a hard sell. The combination of a booking button, phone, and WhatsApp accommodates different communication preferences, which is especially important for a Singapore audience where WhatsApp is a primary contact channel.</p>
+        </div>
+      </div>
+
+      <!-- 8: Franchise -->
+      <div class="pcard">
+        <div class="pcard-head" onclick="toggle(this)">
+          <span class="pc-num">8</span>
+          <div class="pc-text">
+            <div class="pc-title">Franchise Section</div>
+            <div class="pc-goal">Purpose: Serve secondary audience without disrupting primary journey</div>
+          </div>
+          <span class="pc-tag">IA fix</span>
+          <span class="pc-arrow">▾</span>
+        </div>
+        <div class="pcard-body">
+          <div class="wire">
+            <div class="wire-eyebrow">Content structure</div>
+            <div class="wire-row"><span class="wd wd-warm"></span> Position: Near footer, clearly separated from treatment content</div>
+            <div class="wire-row"><span class="wd wd-warm"></span> Short introduction: "Interested in opening a JBT clinic?"</div>
+            <div class="wire-row"><span class="wd wd-green"></span> Single CTA: Learn about franchise opportunities → (links to dedicated page)</div>
+          </div>
+          <p>The overwhelming majority of homepage visitors are patients, not investors. Franchise content placed in the main page flow creates confusion about who the site is for — a patient reading about treatment should not encounter investor acquisition copy mid-journey.</p>
+          <p>Moving the franchise section near the footer keeps it discoverable for the right audience without disrupting the treatment user's decision journey. A dedicated franchise landing page is the proper long-term solution.</p>
+          <div class="improve-note">
+            <span class="in-ico">↑</span>
+            <p>Resolves the core audience confusion. Treatment visitors no longer scroll past investor content to find their booking CTA.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── UX PRINCIPLES APPLIED ── -->
+  <div class="body-section">
+    <span class="eyebrow">UX Principles Applied</span>
+    <h2>The design rationale</h2>
+    <p>Each structural decision in this proposal maps back to an established UX principle. These are not aesthetic preferences — they are behavioural patterns that affect whether users stay, trust, and convert.</p>
+
+    <div class="principles-grid">
+      <div class="principle">
+        <div class="principle-label">Progressive disclosure</div>
+        <div class="principle-desc">Information is revealed in layers — overview first, detail on demand. Reduces overwhelm on first visit.</div>
+      </div>
+      <div class="principle">
+        <div class="principle-label">Cognitive load reduction</div>
+        <div class="principle-desc">Scannable grids replace walls of text. Fewer decisions per screen. Clearer visual hierarchy throughout.</div>
+      </div>
+      <div class="principle">
+        <div class="principle-label">Trust sequencing</div>
+        <div class="principle-desc">Trust signals are introduced progressively — process first, proof second, credentials third — mirroring how people actually decide.</div>
+      </div>
+      <div class="principle">
+        <div class="principle-label">Audience segmentation</div>
+        <div class="principle-desc">Primary and secondary audiences are clearly separated. Each gets their own entry point and journey, not a shared page that serves neither well.</div>
+      </div>
+      <div class="principle">
+        <div class="principle-label">Conversion clarity</div>
+        <div class="principle-desc">The booking CTA is present at the top and bottom of the page. The user always knows what the next step is, wherever they are in the scroll.</div>
+      </div>
+      <div class="principle">
+        <div class="principle-label">Performance perception</div>
+        <div class="principle-desc">Lazy loading and progressive image reveal reduce perceived load time, even before optimising file sizes. First impression matters.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BEFORE / AFTER TABLE ── -->
+  <div class="body-section">
+    <span class="eyebrow">03 — Summary</span>
+    <h2>Before vs. After</h2>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th class="bad">Current</th>
+          <th class="good">Proposed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Primary CTA</td>
+          <td class="bad-v">After 30+ reviews, bottom of page</td>
+          <td class="good-v">Above the fold in hero + repeated at close</td>
+        </tr>
+        <tr>
+          <td>Conditions</td>
+          <td class="bad-v">Dense 12+ item text list</td>
+          <td class="good-v">Scannable 6–8 item icon grid</td>
+        </tr>
+        <tr>
+          <td>Treatment process</td>
+          <td class="bad-v">Not explained anywhere</td>
+          <td class="good-v">3-step visual flow with captions</td>
+        </tr>
+        <tr>
+          <td>Before / After</td>
+          <td class="bad-v">Full gallery, all images loaded at once</td>
+          <td class="good-v">3 lazy-loaded examples, expandable</td>
+        </tr>
+        <tr>
+          <td>Credibility</td>
+          <td class="bad-v">Text block, no face</td>
+          <td class="good-v">Photo, name, credentials, human tone</td>
+        </tr>
+        <tr>
+          <td>Reviews</td>
+          <td class="bad-v">30+ reviews in full — scroll fatigue</td>
+          <td class="good-v">Star rating + 4 selected + expandable</td>
+        </tr>
+        <tr>
+          <td>Franchise content</td>
+          <td class="bad-v">Mixed into treatment flow</td>
+          <td class="good-v">Near footer, with link to dedicated page</td>
+        </tr>
+        <tr>
+          <td>Page performance</td>
+          <td class="bad-v">Heavy initial load from full image sets</td>
+          <td class="good-v">Lazy loading + progressive reveal</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── EXPECTED OUTCOMES ── -->
+  <div class="body-section">
+    <span class="eyebrow">Expected Outcomes</span>
+    <h2>What this redesign should produce</h2>
+
+    <div class="outcomes-grid">
+      <div class="outcome-item">
+        <span class="outcome-ico">↑</span>
+        <span class="outcome-text">Higher consultation booking intent — CTA is present before the user reaches scroll fatigue</span>
+      </div>
+      <div class="outcome-item">
+        <span class="outcome-ico">↑</span>
+        <span class="outcome-text">Reduced bounce — users confirm relevance within 5 seconds via the scannable conditions grid</span>
+      </div>
+      <div class="outcome-item">
+        <span class="outcome-ico">↑</span>
+        <span class="outcome-text">Improved scanning behaviour — visual structure replaces dense text throughout</span>
+      </div>
+      <div class="outcome-item">
+        <span class="outcome-ico">↑</span>
+        <span class="outcome-text">Stronger emotional reassurance — trust signals are sequenced, not dumped all at once</span>
+      </div>
+      <div class="outcome-item">
+        <span class="outcome-ico">↑</span>
+        <span class="outcome-text">Faster perceived load speed — lazy loading and fewer upfront images reduce wait time feeling</span>
+      </div>
+      <div class="outcome-item">
+        <span class="outcome-ico">↑</span>
+        <span class="outcome-text">Clearer audience journeys — patients and franchise investors no longer share the same flow</span>
+      </div>
+    </div>
+
+    <div class="chips" style="margin-top: 1.5rem;">
+      <span class="chip chip-warm">Progressive disclosure</span>
+      <span class="chip chip-warm">Cognitive load reduction</span>
+      <span class="chip chip-warm">Trust sequencing</span>
+      <span class="chip chip-warm">Audience segmentation</span>
+      <span class="chip chip-warm">Conversion clarity</span>
+      <span class="chip chip-warm">Performance perception</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- PROJECT NAV -->
+<div class="project-nav">
+  <a class="proj-nav-link" href="jbt.html">
+    <span class="dir">← View project</span>
+    <span class="title">JBT Web Design</span>
+  </a>
+  <a class="proj-nav-link next" href="index.html">
+    <span class="dir">Back to</span>
+    <span class="title">All Works</span>
+  </a>
+</div>
+
+<footer>
+  <p>© 2026 Nur Azimah &nbsp;·&nbsp; Designed with structure &nbsp;·&nbsp; </p>
+</footer>
+
+<script>
+  function toggle(headEl) {
+    headEl.closest('.pcard').classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>
